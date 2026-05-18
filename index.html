@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Figma UI Blueprint - Mercadinho Estrelato</title>
+    <!-- Tailwind CSS para estilização rápida e moderna -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        estrelato: {
+                            50: '#fefbeb',
+                            100: '#fef3c7',
+                            500: '#eab308', // Dourado Estrelato
+                            600: '#ca8a04',
+                            900: '#854d0e',
+                        },
+                        darkslate: {
+                            800: '#1e293b',
+                            900: '#0f172a', // Azul Escuro Principal
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Estilo para simular guias de layout do Figma quando ativado */
+        .figma-guide {
+            outline: 1px dashed #ec4899 !important;
+            position: relative;
+        }
+        .figma-guide::after {
+            content: attr(data-figma-spec);
+            position: absolute;
+            top: -12px;
+            right: 4px;
+            background: #ec4899;
+            color: white;
+            font-size: 8px;
+            padding: 1px 4px;
+            border-radius: 3px;
+            font-family: monospace;
+            z-index: 50;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 font-sans min-h-screen flex flex-col items-center justify-center p-4">
+
+    <!-- Seletor de Modo de Visualização (Figma Helper) -->
+    <div class="mb-4 bg-white shadow-sm border border-slate-200 rounded-full px-4 py-2 flex items-center gap-3 z-50">
+        <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Modo do Protótipo:</span>
+        <button onclick="toggleFigmaSpecs()" id="btnSpecs" class="px-3 py-1 text-xs font-medium rounded-full bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all flex items-center gap-1">
+            <i class="fa-brands fa-figma text-pink-500"></i> Mostrar Notas do Figma
+        </button>
+        <span class="text-slate-300">|</span>
+        <span class="text-xs text-slate-500"><kbd class="bg-slate-100 px-1.5 py-0.5 border rounded">Esc</kbd> para fechar modal</span>
+    </div>
+
+    <!-- MAIN WRAPPER (Dimensionado em proporções comuns de tela para simular o figma player) -->
+    <div class="w-full max-w-[1280px] h-[780px] bg-white rounded-2xl shadow-2xl overflow-hidden border border-slate-200 flex flex-col relative">
+        
+        <!-- ============================================ -->
+        <!-- TELA 1: LOGIN (Inicialmente Visível) -->
+        <!-- ============================================ -->
+        <div id="screen-login" class="w-full h-full flex flex-col md:flex-row transition-all duration-300">
+            <!-- Esquerda: Ilustração e Branding -->
+            <div class="hidden md:flex md:w-1/2 bg-darkslate-900 text-white p-12 flex-col justify-between relative overflow-hidden">
+                <!-- Círculos de fundo sutis (Glow) -->
+                <div class="absolute -top-40 -left-40 w-96 h-96 bg-estrelato-500 rounded-full opacity-10 filter blur-3xl"></div>
+                <div class="absolute -bottom-40 -right-40 w-96 h-96 bg-blue-500 rounded-full opacity-10 filter blur-3xl"></div>
+                
+                <!-- Logo -->
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-estrelato-500 to-amber-300 flex items-center justify-center shadow-md">
+                        <i class="fa-solid fa-star text-darkslate-900 text-lg"></i>
+                    </div>
+                    <div>
+                        <span class="font-bold text-lg tracking-tight">Estrelato<span class="text-estrelato-500">Store</span></span>
+                        <p class="text-[10px] text-slate-400 -mt-1 tracking-wider uppercase font-semibold">Unisul Campus</p>
+                    </div>
+                </div>
+
+                <!-- Conteúdo Central -->
+                <div class="my-auto max-w-sm">
+                    <h2 class="text-3xl font-bold leading-tight mb-4">Evite perdas no estoque com inteligência operacional.</h2>
+                    <p class="text-slate-300 text-sm leading-relaxed">
+                        Controle datas de validade, receba notificações preditivas e gerencie lotes diretamente da prateleira do seu mercadinho escolar.
+                    </p>
+                    
+                    <!-- Badges rápidos do que o app faz -->
+                    <div class="flex flex-wrap gap-2 mt-6">
+                        <span class="bg-white/10 text-xs px-3 py-1.5 rounded-lg border border-white/10 flex items-center gap-1"><i class="fa-solid fa-barcode text-estrelato-500"></i> Scanner Integrado</span>
+                        <span class="bg-white/10 text-xs px-3 py-1.5 rounded-lg border border-white/10 flex items-center gap-1"><i class="fa-solid fa-bell text-estrelato-500"></i> Alertas no WhatsApp</span>
+                        <span class="bg-white/10 text-xs px-3 py-1.5 rounded-lg border border-white/10 flex items-center gap-1"><i class="fa-solid fa-robot text-estrelato-500"></i> IA Preditiva</span>
+                    </div>
+                </div>
+
+                <!-- Rodapé -->
+                <div class="text-xs text-slate-400 flex justify-between">
+                    <span>© 2026 Mercadinho Estrelato</span>
+                    <span>v1.0.2</span>
+                </div>
+            </div>
+
+            <!-- Direita: Formulário de Login -->
+            <div class="w-full md:w-1/2 bg-white p-12 flex flex-col justify-between" id="figma-login-form">
+                <div class="my-auto max-w-md mx-auto w-full">
+                    <!-- Boas Vindas -->
+                    <div class="mb-8">
+                        <span class="text-xs font-bold uppercase tracking-widest text-estrelato-600 bg-estrelato-50 px-2.5 py-1 rounded">Acesso do Operador</span>
+                        <h1 class="text-2xl font-bold text-darkslate-900 mt-3">Bem-vindo de volta!</h1>
+                        <p class="text-slate-500 text-sm mt-1">Insira suas credenciais para gerenciar o inventário.</p>
+                    </div>
+
+                    <!-- Formulário -->
+                    <form onsubmit="handleLogin(event)" class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2">Usuário ou E-mail</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+                                    <i class="fa-solid fa-user text-sm"></i>
+                                </span>
+                                <input type="text" id="login-username" value="gestor_estrelato" required
+                                    class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-estrelato-500 focus:border-transparent text-sm transition-all"
+                                    placeholder="Ex: gestor@estrelato.com">
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider">Senha</label>
+                                <a href="#" class="text-xs text-amber-600 hover:underline">Esqueceu a senha?</a>
+                            </div>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+                                    <i class="fa-solid fa-lock text-sm"></i>
+                                </span>
+                                <input type="password" id="login-password" value="123456" required
+                                    class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-estrelato-500 focus:border-transparent text-sm transition-all"
+                                    placeholder="••••••••">
+                            </div>
+                        </div>
+
+                        <!-- Manter conectado -->
+                        <div class="flex items-center">
+                            <input type="checkbox" id="remember" checked class="w-4 h-4 text-estrelato-500 border-slate-300 rounded focus:ring-estrelato-500">
+                            <label for="remember" class="ml-2 text-xs text-slate-600 select-none">Manter sessão ativa neste dispositivo</label>
+                        </div>
+
+                        <!-- Botão Entrar -->
+                        <button type="submit" 
+                            class="w-full bg-darkslate-900 text-white hover:bg-darkslate-800 py-3.5 px-4 rounded-xl font-semibold text-sm transition-all shadow-md active:scale-[0.98] flex items-center justify-center gap-2">
+                            <span>Entrar no Sistema</span>
+                            <i class="fa-solid fa-arrow-right text-xs"></i>
+                        </button>
+                    </form>
+
+                    <!-- Credenciais de Teste / Demo Info -->
+                    <div class="mt-8 p-4 bg-slate-50 border border-slate-100 rounded-xl">
+                        <div class="flex gap-2">
+                            <i class="fa-solid fa-circle-info text-amber-500 mt-0.5"></i>
+                            <div>
+                                <h4 class="text-xs font-bold text-slate-700">Acesso Demonstrativo Rápido</h4>
+                                <p class="text-[11px] text-slate-500 mt-0.5">Já preenchemos com usuário teste para você. Basta clicar em <b>"Entrar no Sistema"</b>.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer figma specs helper -->
+                <div class="text-[11px] text-slate-400 text-center flex items-center justify-center gap-4">
+                    <span>Grid de Tela: 1280px Desktop</span>
+                    <span>•</span>
+                    <span>Tipografia: Plus Jakarta Sans</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- TELA 2: TELA PRINCIPAL (DASHBOARD) (Inicialmente Oculta) -->
+        <!-- ============================================ -->
+        <div id="screen-dashboard" class="hidden w-full h-full flex transition-all duration-300">
+            <!-- Sidebar Lateral -->
+            <aside class="w-64 bg-darkslate-900 text-white flex flex-col justify-between p-6 border-r border-slate-800" id="figma-sidebar">
+                <div class="space-y-8">
+                    <!-- Logo Header -->
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-estrelato-500 to-amber-300 flex items-center justify-center">
+                            <i class="fa-solid fa-star text-darkslate-900 text-sm"></i>
+                        </div>
+                        <div>
+                            <span class="font-bold text-md tracking-tight">Estrelato<span class="text-estrelato-500">Store</span></span>
+                            <p class="text-[8px] text-slate-400 -mt-1 tracking-wider uppercase font-semibold">Painel de Validades</p>
+                        </div>
+                    </div>
+
+                    <!-- Navegação -->
+                    <nav class="space-y-1">
+                        <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-estrelato-500 text-darkslate-900 font-bold text-xs transition-all">
+                            <i class="fa-solid fa-chart-pie text-sm"></i> Dashboard
+                        </a>
+                        <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-slate-400 hover:text-white font-medium text-xs transition-all">
+                            <i class="fa-solid fa-boxes-stacked text-sm"></i> Estoque Atual
+                        </a>
+                        <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-slate-400 hover:text-white font-medium text-xs transition-all">
+                            <i class="fa-solid fa-calendar-days text-sm"></i> Controle de Validades
+                        </a>
+                        <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-slate-400 hover:text-white font-medium text-xs transition-all">
+                            <i class="fa-solid fa-clock-rotate-left text-sm"></i> Histórico de Perdas
+                        </a>
+                        <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-slate-400 hover:text-white font-medium text-xs transition-all relative">
+                            <i class="fa-solid fa-robot text-sm"></i> Alertas de IA
+                            <span class="absolute right-4 bg-emerald-500 text-white text-[9px] px-1.5 py-0.5 rounded-full font-bold">Ativo</span>
+                        </a>
+                    </nav>
+                </div>
+
+                <!-- Perfil & LogOut -->
+                <div class="border-t border-slate-800 pt-4">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-9 h-9 rounded-full bg-slate-700 flex items-center justify-center border-2 border-slate-600 overflow-hidden">
+                            <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Estrelato" alt="Avatar" class="w-full h-full">
+                        </div>
+                        <div>
+                            <h4 class="text-xs font-bold text-white">Leonardo Souza</h4>
+                            <p class="text-[10px] text-slate-400">Administrador</p>
+                        </div>
+                    </div>
+                    <button onclick="handleLogout()" class="w-full flex items-center justify-center gap-2 bg-white/5 hover:bg-rose-500/10 hover:text-rose-400 text-slate-400 text-xs py-2.5 px-4 rounded-lg transition-all font-semibold">
+                        <i class="fa-solid fa-sign-out text-sm"></i> Sair do Sistema
+                    </button>
+                </div>
+            </aside>
+
+            <!-- Área de Conteúdo Principal -->
+            <main class="flex-1 flex flex-col bg-slate-50 overflow-y-auto">
+                <!-- Header Superior -->
+                <header class="h-16 border-b border-slate-200 px-8 flex items-center justify-between bg-white shrink-0">
+                    <div class="flex items-center gap-4">
+                        <h2 class="text-sm font-semibold text-slate-400">Olá, <span class="text-slate-800 font-bold">Leonardo</span>! Bem-vindo de volta 👋</h2>
+                    </div>
+
+                    <!-- Ferramentas e Alertas Rápidos -->
+                    <div class="flex items-center gap-4">
+                        <!-- Busca rápida -->
+                        <div class="relative w-64">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+                                <i class="fa-solid fa-magnifying-glass text-xs"></i>
+                            </span>
+                            <input type="text" id="table-search" oninput="filterTableBySearch()"
+                                class="w-full pl-8 pr-4 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-estrelato-500"
+                                placeholder="Buscar produtos ou lote...">
+                        </div>
+
+                        <!-- Sino de Notificações com Badge Real -->
+                        <div class="relative">
+                            <button onclick="toggleAlertsDropdown()" class="w-8 h-8 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 flex items-center justify-center relative">
+                                <i class="fa-solid fa-bell text-xs"></i>
+                                <span class="absolute -top-1 -right-1 w-4 h-4 bg-rose-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center">2</span>
+                            </button>
+                            <!-- Dropdown de Notificações Popover -->
+                            <div id="alerts-dropdown" class="hidden absolute right-0 mt-2 w-80 bg-white border border-slate-200 rounded-xl shadow-lg z-50 p-4">
+                                <div class="flex justify-between items-center mb-3">
+                                    <h4 class="text-xs font-bold text-slate-800">Alertas Recentes (WhatsApp/Zapier)</h4>
+                                    <span class="text-[10px] font-bold text-rose-500 uppercase">Atenção</span>
+                                </div>
+                                <div class="space-y-3">
+                                    <div class="p-2.5 bg-rose-50 rounded-lg border border-rose-100 flex gap-2">
+                                        <i class="fa-brands fa-whatsapp text-emerald-500 text-md mt-0.5"></i>
+                                        <div>
+                                            <p class="text-[11px] text-slate-700 leading-snug"><b>Lote #882 vencido hoje!</b> Notificação disparada para remoção imediata.</p>
+                                            <span class="text-[9px] text-slate-400">Há 5 min • Disparado via Make</span>
+                                        </div>
+                                    </div>
+                                    <div class="p-2.5 bg-amber-50 rounded-lg border border-amber-100 flex gap-2">
+                                        <i class="fa-solid fa-robot text-amber-500 text-md mt-0.5"></i>
+                                        <div>
+                                            <p class="text-[11px] text-slate-700 leading-snug"><b>Iogurte Grego expira em 5 dias.</b> Sugestão: Criar promoção de queima de estoque.</p>
+                                            <span class="text-[9px] text-slate-400">Há 2 horas • Sugestão IA</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sincronização ERP indicador -->
+                        <div class="flex items-center gap-1.5 bg-emerald-50 text-emerald-700 text-[10px] font-bold px-2.5 py-1 rounded-full">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                            <span>UniPlus Integrado</span>
+                        </div>
+                    </div>
+                </header>
+
+                <!-- Área Geral de Dados -->
+                <div class="p-6 space-y-6 flex-1">
+                    
+                    <!-- Linha 1: Cartões de Métricas (Dashboard KPIs) -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="figma-kpi-row">
+                        <!-- Card 1: Em Estoque -->
+                        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+                            <div class="space-y-1">
+                                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Produtos Cadastrados</span>
+                                <h3 class="text-xl font-bold text-slate-800" id="kpi-total">1.240</h3>
+                                <p class="text-[10px] text-emerald-600 font-semibold"><i class="fa-solid fa-arrow-trend-up"></i> Sincronizado do Uniplus</p>
+                            </div>
+                            <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
+                                <i class="fa-solid fa-boxes-stacked text-md"></i>
+                            </div>
+                        </div>
+
+                        <!-- Card 2: Vencendo -->
+                        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+                            <div class="space-y-1">
+                                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Vencendo (Próximos 15d)</span>
+                                <h3 class="text-xl font-bold text-amber-600" id="kpi-warning">3 Lotes</h3>
+                                <p class="text-[10px] text-amber-500 font-semibold"><i class="fa-solid fa-triangle-exclamation"></i> Requer Atenção</p>
+                            </div>
+                            <div class="w-10 h-10 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center">
+                                <i class="fa-solid fa-hourglass-half text-md animate-pulse"></i>
+                            </div>
+                        </div>
+
+                        <!-- Card 3: Vencidos -->
+                        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+                            <div class="space-y-1">
+                                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Produtos Vencidos</span>
+                                <h3 class="text-xl font-bold text-rose-600" id="kpi-expired">1 Lote</h3>
+                                <p class="text-[10px] text-rose-500 font-semibold"><i class="fa-solid fa-circle-xmark"></i> Remover do corredor!</p>
+                            </div>
+                            <div class="w-10 h-10 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center">
+                                <i class="fa-solid fa-trash-can text-md"></i>
+                            </div>
+                        </div>
+
+                        <!-- Card 4: Estoque Baixo -->
+                        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+                            <div class="space-y-1">
+                                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Estoque Crítico / Baixo</span>
+                                <h3 class="text-xl font-bold text-blue-900" id="kpi-low">5 Itens</h3>
+                                <p class="text-[10px] text-blue-500 font-semibold"><i class="fa-solid fa-cart-flatbed-suitcase"></i> Reposição Necessária</p>
+                            </div>
+                            <div class="w-10 h-10 rounded-lg bg-slate-100 text-slate-700 flex items-center justify-center">
+                                <i class="fa-solid fa-cart-arrow-down text-md"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Linha 2: Área de Tabelas & Lotes + Alertas / Relatórios Inteligentes -->
+                    <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+                        
+                        <!-- Coluna 1 e 2: Listagem de Estoque e Validades -->
+                        <div class="xl:col-span-2 bg-white rounded-xl border border-slate-200 p-6 shadow-sm flex flex-col justify-between h-[450px]">
+                            <!-- Topo do bloco -->
+                            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4">
+                                <div>
+                                    <h3 class="text-sm font-bold text-slate-800">Monitoramento Dinâmico de Lotes</h3>
+                                    <p class="text-xs text-slate-400">Valores filtrados dinamicamente com alertas inteligentes.</p>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <!-- Abas Filtros rápidos -->
+                                    <div class="bg-slate-100 p-1 rounded-lg flex gap-1">
+                                        <button onclick="filterTable('all')" id="btn-filt-all" class="px-2.5 py-1 text-[10px] font-bold rounded-md bg-white text-darkslate-900 shadow-sm transition-all">Todos</button>
+                                        <button onclick="filterTable('vencido')" id="btn-filt-vencido" class="px-2.5 py-1 text-[10px] font-bold rounded-md text-slate-500 hover:text-darkslate-900 transition-all">Vencidos</button>
+                                        <button onclick="filterTable('proximo')" id="btn-filt-proximo" class="px-2.5 py-1 text-[10px] font-bold rounded-md text-slate-500 hover:text-darkslate-900 transition-all">Vencendo</button>
+                                        <button onclick="filterTable('seguro')" id="btn-filt-seguro" class="px-2.5 py-1 text-[10px] font-bold rounded-md text-slate-500 hover:text-darkslate-900 transition-all">Seguros</button>
+                                    </div>
+
+                                    <!-- Botão Adicionar Produto Lote -->
+                                    <button onclick="openAddProductModal()" class="bg-darkslate-900 hover:bg-darkslate-800 text-white font-bold text-xs py-2 px-3 rounded-lg flex items-center gap-1.5 shadow-sm active:scale-[0.98] transition-all">
+                                        <i class="fa-solid fa-plus text-[10px]"></i> Novo Lote
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Tabela Real com Rolagem -->
+                            <div class="flex-1 overflow-y-auto border border-slate-100 rounded-lg">
+                                <table class="w-full text-left border-collapse text-xs" id="product-table">
+                                    <thead>
+                                        <tr class="bg-slate-50 border-b border-slate-200 text-slate-500 sticky top-0 font-bold uppercase tracking-wider text-[9px]">
+                                            <th class="p-3">Código/EAN</th>
+                                            <th class="p-3">Nome do Produto</th>
+                                            <th class="p-3">Lote</th>
+                                            <th class="p-3">Data Validade</th>
+                                            <th class="p-3 text-center">Qtd</th>
+                                            <th class="p-3 text-right">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-slate-100" id="table-body-lotes">
+                                        <!-- Preenchido via Javascript com dados dinâmicos -->
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Paginação/Meta-dados -->
+                            <div class="flex items-center justify-between mt-4 pt-4 border-t border-slate-100 text-[10px] text-slate-400">
+                                <span>Mostrando <span id="tbl-count-label" class="font-bold text-slate-700">5</span> lotes em destaque</span>
+                                <div class="flex gap-2">
+                                    <button class="px-2.5 py-1 rounded bg-slate-100 border text-slate-600 disabled:opacity-50">Anterior</button>
+                                    <button class="px-2.5 py-1 rounded bg-slate-100 border text-slate-600 disabled:opacity-50">Próximo</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Coluna 3: Alertas Automáticos & Ações de IA (WhatsApp/Zapier/Make) -->
+                        <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm flex flex-col justify-between h-[450px]" id="figma-ai-panel">
+                            <div>
+                                <h3 class="text-sm font-bold text-slate-800">Alertas de IA & Automações</h3>
+                                <p class="text-xs text-slate-400">Notificações enviadas ao WhatsApp do Gestor via Zapier.</p>
+                            </div>
+
+                            <div class="flex-1 my-4 space-y-3 overflow-y-auto pr-1">
+                                <!-- Alerta 1 (Sucesso) -->
+                                <div class="p-3 bg-emerald-50 rounded-xl border border-emerald-100 space-y-1">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-[9px] font-bold text-emerald-700 uppercase">Mensagem Entregue</span>
+                                        <span class="text-[8px] text-slate-400">Agora mesmo</span>
+                                    </div>
+                                    <p class="text-[11px] text-slate-700">Relatório geral de controle de estoque gerado automaticamente no Notion do Estrelato.</p>
+                                    <div class="flex items-center gap-1 text-[9px] text-slate-500">
+                                        <i class="fa-solid fa-code-merge"></i> Sincronizado via Zapier
+                                    </div>
+                                </div>
+
+                                <!-- Alerta 2 (Aviso Crítico) -->
+                                <div class="p-3 bg-rose-50 rounded-xl border border-rose-100 space-y-1">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-[9px] font-bold text-rose-700 uppercase">Ação Recomendada</span>
+                                        <span class="text-[8px] text-slate-400">Há 1h atrás</span>
+                                    </div>
+                                    <p class="text-[11px] text-slate-700"><b>Atenção:</b> Lote #342 de "Iogurte Grego" expira no dia 23/05. Disparando promoção de queima de estoque de 50%!</p>
+                                    <div class="flex items-center gap-1 text-[9px] text-slate-500">
+                                        <i class="fa-solid fa-robot text-rose-600"></i> Sugestão Assistente Gemini
+                                    </div>
+                                </div>
+
+                                <!-- Alerta 3 (Informativo) -->
+                                <div class="p-3 bg-blue-50 rounded-xl border border-blue-100 space-y-1">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-[9px] font-bold text-blue-700 uppercase">Rotina do Sistema</span>
+                                        <span class="text-[8px] text-slate-400">Ontem</span>
+                                    </div>
+                                    <p class="text-[11px] text-slate-700">Rotina de varredura geral de datas de validade concluída no Banco PostgreSQL.</p>
+                                    <div class="flex items-center gap-1 text-[9px] text-slate-500">
+                                        <i class="fa-solid fa-database"></i> Backup automático AWS concluído
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Botão para Testar Disparador de Mensagem -->
+                            <button onclick="triggerFigmaAlertSimulation()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs py-2.5 rounded-lg border border-slate-200 transition-all flex items-center justify-center gap-2">
+                                <i class="fa-brands fa-whatsapp text-emerald-500 text-sm"></i> Simular Disparo WhatsApp API
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- MODAL INTERATIVO: ADICIONAR LOTE / SCANNER -->
+        <!-- ============================================ -->
+        <div id="modal-add-product" class="hidden absolute inset-0 bg-darkslate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden border border-slate-200" id="figma-modal-component">
+                
+                <!-- Cabeçalho Modal -->
+                <div class="p-6 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
+                    <div>
+                        <h3 class="text-sm font-bold text-slate-800">Cadastrar Lote / Entrada de Produto</h3>
+                        <p class="text-xs text-slate-400">Dê entrada rápida digitando ou simulando leitura de código.</p>
+                    </div>
+                    <button onclick="closeAddProductModal()" class="w-8 h-8 rounded-lg border hover:bg-slate-100 flex items-center justify-center text-slate-500">
+                        <i class="fa-solid fa-xmark text-sm"></i>
+                    </button>
+                </div>
+
+                <div class="p-6 space-y-4">
+                    <!-- Scanner Simulador UI -->
+                    <div class="bg-darkslate-900 rounded-xl p-4 text-center border-2 border-dashed border-estrelato-500 flex flex-col items-center justify-center gap-2 text-white relative h-32">
+                        <i class="fa-solid fa-barcode text-4xl text-estrelato-500 animate-pulse"></i>
+                        <span class="text-[10px] font-bold text-slate-300 uppercase tracking-widest">Leitor de Código de Barras (Câmera)</span>
+                        <p class="text-[9px] text-slate-500">O operador bipa o EAN usando a câmera do tablet/celular.</p>
+                    </div>
+
+                    <!-- Campos do Formulário -->
+                    <form id="form-add-product" onsubmit="saveProductBatch(event)" class="space-y-3">
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Código de Barras (EAN)</label>
+                                <input type="text" id="new-ean" value="7894900011517" required
+                                    class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:ring-1 focus:ring-estrelato-500 focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Código Lote</label>
+                                <input type="text" id="new-lote" value="L-89A" required
+                                    class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:ring-1 focus:ring-estrelato-500 focus:outline-none">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Nome do Produto</label>
+                            <input type="text" id="new-name" placeholder="Ex: Leite Integral Piracanjuba 1L" required
+                                class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:ring-1 focus:ring-estrelato-500 focus:outline-none">
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Quantidade</label>
+                                <input type="number" id="new-qty" value="12" required
+                                    class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:ring-1 focus:ring-estrelato-500 focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Data de Validade</label>
+                                <input type="date" id="new-date" required
+                                    class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:ring-1 focus:ring-estrelato-500 focus:outline-none">
+                            </div>
+                        </div>
+
+                        <!-- Botões de Ação do Modal -->
+                        <div class="flex gap-2 pt-4 border-t border-slate-100">
+                            <button type="button" onclick="closeAddProductModal()" class="flex-1 py-2 text-xs font-bold text-slate-500 bg-slate-50 hover:bg-slate-100 rounded-lg border transition-all">Cancelar</button>
+                            <button type="submit" class="flex-1 py-2 text-xs font-bold text-darkslate-900 bg-estrelato-500 hover:bg-estrelato-600 rounded-lg transition-all shadow-sm">Confirmar Lote</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- NOTAS DO FIGMA (Oculto até ser acionado) -->
+    <div id="figma-specs-drawer" class="hidden mt-6 bg-white shadow-lg border border-slate-200 rounded-xl p-6 w-full max-w-[1280px]">
+        <div class="flex gap-2 items-center mb-4 border-b pb-2">
+            <i class="fa-brands fa-figma text-pink-500 text-lg"></i>
+            <h3 class="font-bold text-slate-800 text-sm">Estruturação de Telas para o Figma (Documentação do Grupo)</h3>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs text-slate-600">
+            <div class="space-y-2">
+                <h4 class="font-bold text-pink-500 uppercase">1. Frame Principal (Desktop)</h4>
+                <p><b>Dimensões recomendadas:</b> 1440px x 900px ou 1280px x 800px para protótipo de computador.</p>
+                <p><b>Grid de Layout:</b> Grid de 12 colunas, margem lateral de 80px e gutter (espaçamento entre colunas) de 24px.</p>
+                <p><b>Fontes:</b> Use <i>Plus Jakarta Sans</i> ou <i>Inter</i> para um visual limpo e super-legível.</p>
+            </div>
+            <div class="space-y-2">
+                <h4 class="font-bold text-pink-500 uppercase">2. Organização por Componentes</h4>
+                <p>Crie componentes reutilizáveis no figma para:</p>
+                <ul class="list-disc list-inside space-y-1">
+                    <li><b>Card de Status:</b> Com variante para "Alerta" e "Vencido"</li>
+                    <li><b>Menu Lateral (Sidebar):</b> Usando auto-layout</li>
+                    <li><b>Status Badge:</b> Verde (Seguro), Amarelo (Atenção), Vermelho (Vencido)</li>
+                </ul>
+            </div>
+            <div class="space-y-2">
+                <h4 class="font-bold text-pink-500 uppercase">3. Variáveis e Estilos Locais</h4>
+                <p>Configure a biblioteca de cores com:</p>
+                <p><span class="inline-block w-3 h-3 bg-[#0f172a] rounded mr-1"></span> <code>#0f172a</code> (Azul Escuro / Navy)</p>
+                <p><span class="inline-block w-3 h-3 bg-[#eab308] rounded mr-1"></span> <code>#eab308</code> (Amarelo / Dourado Estrelato)</p>
+                <p><span class="inline-block w-3 h-3 bg-[#f8fafc] rounded mr-1"></span> <code>#f8fafc</code> (Cinza Claro / Fundo)</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPTS DE COMPORTAMENTO INTERATIVO -->
+    <script>
+        // Dados locais simulados para a tabela de produtos
+        const baseProducts = [
+            { ean: '7894900011517', name: 'Coca-Cola Lata 350ml', lote: 'L-22A', date: '2026-12-15', qty: 45 },
+            { ean: '7891000341355', name: 'Leite Integral Piracanjuba 1L', lote: 'L-882', date: '2026-05-18', qty: 2 }, // Vencido hoje
+            { ean: '7892144341908', name: 'Iogurte Grego Vigor 100g', lote: 'L-342', date: '2026-05-23', qty: 18 }, // Próximo ao vencimento (5 dias)
+            { ean: '7891052010216', name: 'Bolacha Bauducco Recheada', lote: 'L-10C', date: '2026-05-25', qty: 3 },  // Estoque Crítico
+            { ean: '7898911221102', name: 'Chocolate Lacta Barra 90g', lote: 'L-44B', date: '2026-08-30', qty: 24 }
+        ];
+
+        let listLotes = [...baseProducts];
+        let activeFilter = 'all';
+
+        // Renderizar Tabela baseado nos filtros
+        function renderTable() {
+            const tableBody = document.getElementById('table-body-lotes');
+            tableBody.innerHTML = '';
+            
+            // Filtro por categoria lógico
+            const filtered = listLotes.filter(item => {
+                const statusInfo = getBatchStatus(item.date, item.qty);
+                if (activeFilter === 'all') return true;
+                return statusInfo.status === activeFilter;
+            });
+
+            filtered.forEach(item => {
+                const statusInfo = getBatchStatus(item.date, item.qty);
+                
+                const row = document.createElement('tr');
+                row.className = "hover:bg-slate-50 transition-colors";
+                row.innerHTML = `
+                    <td class="p-3 font-mono text-slate-500">${item.ean}</td>
+                    <td class="p-3 font-semibold text-slate-800">${item.name}</td>
+                    <td class="p-3"><span class="bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-medium text-[10px]">${item.lote}</span></td>
+                    <td class="p-3 text-slate-600">${formatDate(item.date)}</td>
+                    <td class="p-3 text-center font-bold ${item.qty <= 5 ? 'text-amber-600' : 'text-slate-700'}">${item.qty}</td>
+                    <td class="p-3 text-right">
+                        <span class="px-2.5 py-1 rounded-full text-[9px] font-bold ${statusInfo.badgeClass}">
+                            <i class="${statusInfo.icon} mr-1"></i> ${statusInfo.label}
+                        </span>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+
+            document.getElementById('tbl-count-label').innerText = filtered.length;
+            calculateKPIs();
+        }
+
+        // Lógica de Semáforo de Alertas
+        function getBatchStatus(dateStr, qty) {
+            const today = new Date('2026-05-18'); // Data base congelada para demonstração consistente
+            const expDate = new Date(dateStr);
+            const diffTime = expDate - today;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+            if (diffDays < 0 || dateStr === '2026-05-18') {
+                return {
+                    status: 'vencido',
+                    label: 'Vencido',
+                    badgeClass: 'bg-rose-50 text-rose-700 border border-rose-200',
+                    icon: 'fa-solid fa-circle-xmark'
+                };
+            } else if (diffDays <= 15) {
+                return {
+                    status: 'proximo',
+                    label: `Próximo (${diffDays} dias)`,
+                    badgeClass: 'bg-amber-50 text-amber-700 border border-amber-200',
+                    icon: 'fa-solid fa-triangle-exclamation'
+                };
+            } else {
+                return {
+                    status: 'seguro',
+                    label: 'Seguro',
+                    badgeClass: 'bg-emerald-50 text-emerald-700 border border-emerald-200',
+                    icon: 'fa-solid fa-circle-check'
+                };
+            }
+        }
+
+        // Métricas Globais (DASHBOARD CARDS)
+        function calculateKPIs() {
+            const today = new Date('2026-05-18');
+            let totalItems = listLotes.length;
+            let expiredCount = 0;
+            let warningCount = 0;
+            let lowCount = 0;
+
+            listLotes.forEach(item => {
+                const expDate = new Date(item.date);
+                const diffTime = expDate - today;
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                if (diffDays < 0 || item.date === '2026-05-18') {
+                    expiredCount++;
+                } else if (diffDays <= 15) {
+                    warningCount++;
+                }
+
+                if (item.qty <= 5) {
+                    lowCount++;
+                }
+            });
+
+            document.getElementById('kpi-total').innerText = totalItems;
+            document.getElementById('kpi-expired').innerText = `${expiredCount} Lote${expiredCount !== 1 ? 's' : ''}`;
+            document.getElementById('kpi-warning').innerText = `${warningCount} Lote${warningCount !== 1 ? 's' : ''}`;
+            document.getElementById('kpi-low').innerText = `${lowCount} Item${lowCount !== 1 ? 's' : ''}`;
+        }
+
+        // Busca rápida na tabela
+        function filterTableBySearch() {
+            const query = document.getElementById('table-search').value.toLowerCase();
+            const tableBody = document.getElementById('table-body-lotes');
+            tableBody.innerHTML = '';
+
+            const filtered = listLotes.filter(item => 
+                item.name.toLowerCase().includes(query) || 
+                item.lote.toLowerCase().includes(query) ||
+                item.ean.includes(query)
+            );
+
+            filtered.forEach(item => {
+                const statusInfo = getBatchStatus(item.date, item.qty);
+                const row = document.createElement('tr');
+                row.className = "hover:bg-slate-50 transition-colors";
+                row.innerHTML = `
+                    <td class="p-3 font-mono text-slate-500">${item.ean}</td>
+                    <td class="p-3 font-semibold text-slate-800">${item.name}</td>
+                    <td class="p-3"><span class="bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-medium text-[10px]">${item.lote}</span></td>
+                    <td class="p-3 text-slate-600">${formatDate(item.date)}</td>
+                    <td class="p-3 text-center font-bold ${item.qty <= 5 ? 'text-amber-600' : 'text-slate-700'}">${item.qty}</td>
+                    <td class="p-3 text-right">
+                        <span class="px-2.5 py-1 rounded-full text-[9px] font-bold ${statusInfo.badgeClass}">
+                            <i class="${statusInfo.icon} mr-1"></i> ${statusInfo.label}
+                        </span>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+            document.getElementById('tbl-count-label').innerText = filtered.length;
+        }
+
+        // Mudar filtros de categoria das abas
+        function filterTable(filter) {
+            activeFilter = filter;
+            
+            // Atualizar botões visuais
+            ['all', 'vencido', 'proximo', 'seguro'].forEach(filtName => {
+                const btn = document.getElementById(`btn-filt-${filtName}`);
+                if (filtName === filter) {
+                    btn.className = "px-2.5 py-1 text-[10px] font-bold rounded-md bg-white text-darkslate-900 shadow-sm transition-all";
+                } else {
+                    btn.className = "px-2.5 py-1 text-[10px] font-bold rounded-md text-slate-500 hover:text-darkslate-900 transition-all";
+                }
+            });
+
+            renderTable();
+        }
+
+        // Formatador simples de datas
+        function formatDate(dateStr) {
+            const parts = dateStr.split('-');
+            return `${parts[2]}/${parts[1]}/${parts[0]}`;
+        }
+
+        // Login Handler
+        function handleLogin(e) {
+            e.preventDefault();
+            document.getElementById('screen-login').classList.add('hidden');
+            document.getElementById('screen-dashboard').classList.remove('hidden');
+            renderTable();
+        }
+
+        // LogOut Handler
+        function handleLogout() {
+            document.getElementById('screen-dashboard').classList.add('hidden');
+            document.getElementById('screen-login').classList.remove('hidden');
+        }
+
+        // Modais controle
+        function openAddProductModal() {
+            document.getElementById('modal-add-product').classList.remove('hidden');
+            // Definir data para demonstração fácil (vencendo em 10 dias)
+            const d = new Date('2026-05-18');
+            d.setDate(d.getDate() + 10);
+            document.getElementById('new-date').value = d.toISOString().split('T')[0];
+        }
+
+        function closeAddProductModal() {
+            document.getElementById('modal-add-product').classList.add('hidden');
+            document.getElementById('form-add-product').reset();
+        }
+
+        // Sair do Modal usando Tecla ESC
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeAddProductModal();
+            }
+        });
+
+        // Adicionar novo lote
+        function saveProductBatch(e) {
+            e.preventDefault();
+            const ean = document.getElementById('new-ean').value;
+            const name = document.getElementById('new-name').value;
+            const lote = document.getElementById('new-lote').value;
+            const date = document.getElementById('new-date').value;
+            const qty = parseInt(document.getElementById('new-qty').value);
+
+            listLotes.unshift({ ean, name, lote, date, qty });
+            renderTable();
+            closeAddProductModal();
+        }
+
+        // Popover de notificações
+        function toggleAlertsDropdown() {
+            const popover = document.getElementById('alerts-dropdown');
+            popover.classList.toggle('hidden');
+        }
+
+        // Simulação de disparo WhatsApp API
+        function triggerFigmaAlertSimulation() {
+            alert('⚙️ Integração com Make/Zapier executada:\n\nMensagem enviada ao WhatsApp do Gestor sobre lotes críticos. Verifique as notificações recentes no sininho!');
+        }
+
+        // Exibir Guias Figma
+        let guidesActive = false;
+        function toggleFigmaSpecs() {
+            guidesActive = !guidesActive;
+            const drawer = document.getElementById('figma-specs-drawer');
+            const btn = document.getElementById('btnSpecs');
+            
+            if (guidesActive) {
+                drawer.classList.remove('hidden');
+                btn.classList.add('bg-pink-100', 'text-pink-700', 'border-pink-300');
+                
+                // Adicionar marcações nas telas de exemplo
+                document.getElementById('figma-login-form').classList.add('figma-guide');
+                document.getElementById('figma-login-form').setAttribute('data-figma-spec', 'Width: 50% | Padding: 48px');
+                
+                document.getElementById('figma-sidebar').classList.add('figma-guide');
+                document.getElementById('figma-sidebar').setAttribute('data-figma-spec', 'Width: 256px | Background: #0f172a');
+
+                document.getElementById('figma-kpi-row').classList.add('figma-guide');
+                document.getElementById('figma-kpi-row').setAttribute('data-figma-spec', 'Gap: 16px | Cards: 4 Cols');
+
+                document.getElementById('figma-ai-panel').classList.add('figma-guide');
+                document.getElementById('figma-ai-panel').setAttribute('data-figma-spec', 'Component: Sidebar List');
+                
+            } else {
+                drawer.classList.add('hidden');
+                btn.classList.remove('bg-pink-100', 'text-pink-700', 'border-pink-300');
+                
+                document.getElementById('figma-login-form').classList.remove('figma-guide');
+                document.getElementById('figma-sidebar').classList.remove('figma-guide');
+                document.getElementById('figma-kpi-row').classList.remove('figma-guide');
+                document.getElementById('figma-ai-panel').classList.remove('figma-guide');
+            }
+        }
+
+        // Inicializador
+        renderTable();
+    </script>
+</body>
+</html>

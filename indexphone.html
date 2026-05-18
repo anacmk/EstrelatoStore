@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Figma Mobile - Mercadinho Estrelato</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        estrelato: {
+                            50: '#fefbeb',
+                            100: '#fef3c7',
+                            400: '#fbbf24',
+                            500: '#eab308', // Amarelo Estrelato
+                            600: '#ca8a04',
+                            950: '#451a03',
+                        },
+                        darkslate: {
+                            800: '#1e293b',
+                            900: '#0f172a', // Azul Escuro Principal
+                            950: '#020617',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Estilos personalizados para o visual do smartphone */
+        .phone-shadow {
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        
+        /* Ocultar barra de rolagem mas manter funcionamento */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Efeito de linha laser do scanner */
+        @keyframes laser-sweep {
+            0% { top: 0%; }
+            50% { top: 100%; }
+            100% { top: 0%; }
+        }
+        .scanner-laser {
+            animation: laser-sweep 3s infinite ease-in-out;
+        }
+
+        /* Simulação de guias de componente no Figma */
+        .figma-tag {
+            display: none;
+        }
+        .figma-active .figma-tag {
+            display: block;
+        }
+        .figma-active .figma-border {
+            outline: 1.5px dashed #f43f5e !important;
+            outline-offset: -1px;
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 font-sans min-h-screen flex flex-col items-center justify-center p-2 sm:p-6 select-none overflow-x-hidden">
+
+    <!-- Painel Auxiliar Superior do Figma -->
+    <div class="mb-4 bg-slate-800 border border-slate-700 rounded-2xl p-3 max-w-[410px] w-full flex flex-col gap-2 shadow-lg z-50">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center gap-1.5 text-xs text-slate-300">
+                <i class="fa-brands fa-figma text-rose-500 font-bold"></i>
+                <span class="font-bold tracking-tight">Figma Mobile Mirror</span>
+            </div>
+            <button onclick="toggleFigmaGuides()" id="guideBtn" class="bg-slate-700 hover:bg-slate-600 text-white text-[11px] font-bold px-3 py-1 rounded-lg transition-all">
+                Mostrar Notas Figma
+            </button>
+        </div>
+        <div class="text-[10px] text-slate-400 leading-tight">
+            Clique nos botões da barra inferior do celular para navegar e testar todas as telas.
+        </div>
+    </div>
+
+    <!-- FRAME DO SMARTPHONE -->
+    <div class="relative w-[390px] h-[844px] bg-darkslate-950 rounded-[55px] border-[12px] border-slate-800 phone-shadow overflow-hidden flex flex-col">
+        
+        <!-- DYNAMIC ISLAND (Entalhe da Câmera do Smartphone) -->
+        <div class="absolute top-3 left-1/2 -translate-x-1/2 w-[110px] h-[30px] bg-black rounded-full z-50 flex items-center justify-between px-3">
+            <div class="w-3.5 h-3.5 bg-zinc-900 rounded-full border border-zinc-800"></div>
+            <div class="w-2 h-2 bg-blue-950 rounded-full"></div>
+        </div>
+
+        <!-- BARRA DE STATUS DO CELULAR -->
+        <div class="h-11 bg-transparent shrink-0 flex items-center justify-between px-8 text-white text-[12px] font-semibold z-40 select-none">
+            <span id="mobile-time">19:15</span>
+            <div class="flex items-center gap-1.5">
+                <i class="fa-solid fa-signal text-[10px]"></i>
+                <span class="text-[10px]">5G</span>
+                <i class="fa-solid fa-battery-three-quarters text-[12px]"></i>
+            </div>
+        </div>
+
+        <!-- ======================================================== -->
+        <!-- TELAS DO APP (ROLÁVEIS POR DENTRO) -->
+        <!-- ======================================================== -->
+        <div class="flex-1 overflow-y-auto no-scrollbar relative flex flex-col bg-slate-50 text-slate-800" id="mobile-viewport">
+
+            <!-- TELA 1: LOGIN MOBILE (Ativa por padrão) -->
+            <div id="scr-login" class="absolute inset-0 bg-darkslate-900 text-white flex flex-col justify-between p-6 z-40 transition-all duration-300">
+                
+                <!-- Ilustração superior de marca -->
+                <div class="flex flex-col items-center mt-8 space-y-3">
+                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-estrelato-500 to-amber-300 flex items-center justify-center shadow-lg">
+                        <i class="fa-solid fa-star text-darkslate-900 text-3xl"></i>
+                    </div>
+                    <div class="text-center">
+                        <h1 class="text-2xl font-black tracking-tight text-white">Estrelato<span class="text-estrelato-500">Store</span></h1>
+                        <p class="text-[10px] text-slate-400 uppercase tracking-widest font-semibold">Sistema de controle de estoque</p>
+                    </div>
+                </div>
+
+                <!-- Formulário de Login -->
+                <div class="my-auto space-y-5 figma-border relative">
+                    <span class="figma-tag absolute -top-5 left-0 bg-rose-500 text-white text-[9px] px-1 rounded">Frame: FormLogin</span>
+                    
+                    <div class="text-center space-y-1">
+                        <h2 class="text-lg font-bold">Acesso do Operador</h2>
+                        <p class="text-xs text-slate-400">Insira suas credenciais para gerenciar validades.</p>
+                    </div>
+
+                    <form onsubmit="handleMobileLogin(event)" class="space-y-4 text-left">
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Operador</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-500">
+                                    <i class="fa-solid fa-user text-xs"></i>
+                                </span>
+                                <input type="text" id="mob-username" value="gestor_estrelato" required
+                                    class="w-full pl-9 pr-3 py-2.5 bg-slate-800/80 border border-slate-700 rounded-xl text-white text-xs focus:outline-none focus:ring-1 focus:ring-estrelato-500">
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between mb-1.5">
+                                <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider">Senha</label>
+                                <a href="#" class="text-[10px] text-amber-500 hover:underline">Esqueceu?</a>
+                            </div>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-500">
+                                    <i class="fa-solid fa-lock text-xs"></i>
+                                </span>
+                                <input type="password" id="mob-password" value="123456" required
+                                    class="w-full pl-9 pr-3 py-2.5 bg-slate-800/80 border border-slate-700 rounded-xl text-white text-xs focus:outline-none focus:ring-1 focus:ring-estrelato-500">
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-2">
+                            <input type="checkbox" id="mob-keep" checked class="w-3.5 h-3.5 rounded text-estrelato-500 border-slate-700 bg-slate-800 focus:ring-estrelato-500">
+                            <label for="mob-keep" class="text-[11px] text-slate-400">Lembrar neste celular</label>
+                        </div>
+
+                        <button type="submit" class="w-full py-3 bg-estrelato-500 text-darkslate-900 hover:bg-estrelato-600 font-bold rounded-xl text-xs tracking-wider uppercase shadow-md transition-all active:scale-[0.98]">
+                            Entrar no Sistema
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Dica do Trabalho -->
+                <div class="p-3 bg-slate-800/50 border border-slate-800 rounded-xl text-center">
+                    <p class="text-[10px] text-amber-400 font-bold"><i class="fa-solid fa-info-circle mr-1"></i> Acesso de Teste Rápido</p>
+                    <p class="text-[9px] text-slate-400 mt-0.5">As credenciais padrão estão preenchidas. Clique em Entrar.</p>
+                </div>
+            </div>
+
+            <!-- TELA 2: HOME DASHBOARD (Principal) -->
+            <div id="scr-dashboard" class="hidden flex-1 flex flex-col p-4 space-y-5 pb-20">
+                <!-- Header do Operador -->
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-10 h-10 rounded-full border-2 border-estrelato-500 bg-slate-200 overflow-hidden">
+                            <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Estrelato" alt="Avatar">
+                        </div>
+                        <div>
+                            <p class="text-[10px] text-slate-400 leading-none">Bem-vindo,</p>
+                            <h3 class="text-sm font-bold text-slate-800">Simon</h3>
+                        </div>
+                    </div>
+                    <!-- Status de Integração ERP -->
+                    <span class="flex items-center gap-1 text-[9px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                        Online
+                    </span>
+                </div>
+
+                <!-- Banner Inteligência Artificial de Sugestão -->
+                <div class="bg-gradient-to-r from-darkslate-900 to-slate-800 rounded-2xl p-4 text-white space-y-2 relative overflow-hidden shadow-md">
+                    <div class="absolute -top-10 -right-10 w-28 h-28 bg-estrelato-500 rounded-full opacity-10 filter blur-xl"></div>
+                    <div class="flex items-center gap-2">
+                        <span class="bg-estrelato-500 text-darkslate-900 text-[9px] font-extrabold px-1.5 py-0.5 rounded uppercase">Recomendação IA</span>
+                        <span class="text-[9px] text-slate-300">Hoje</span>
+                    </div>
+                    <h4 class="text-xs font-bold text-amber-300 leading-snug">Promova o Iogurte Grego!</h4>
+                    <p class="text-[10px] text-slate-300 leading-relaxed">
+                        Lote <b>#342</b> vence em 5 dias. Sugerimos criar promoção de 50% de desconto no balcão da faculdade.
+                    </p>
+                    <button onclick="switchTab('tab-ia')" class="text-[9px] text-estrelato-400 font-bold hover:underline flex items-center gap-1 mt-1">
+                        Ver automações de queima <i class="fa-solid fa-angle-right"></i>
+                    </button>
+                </div>
+
+                <!-- CARDS DE INDICADORES (KPIs) -->
+                <div class="grid grid-cols-2 gap-3 figma-border relative">
+                    <span class="figma-tag absolute -top-5 left-0 bg-rose-500 text-white text-[9px] px-1 rounded">Component: KPIs Grid</span>
+                    
+                    <!-- Card 1: Total -->
+                    <div class="bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Produtos</span>
+                            <div class="w-6 h-6 rounded bg-slate-100 text-slate-600 flex items-center justify-center text-xs">
+                                <i class="fa-solid fa-boxes-stacked"></i>
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            <h3 class="text-lg font-black text-slate-800" id="mob-kpi-total">5</h3>
+                            <p class="text-[9px] text-emerald-600 font-bold mt-0.5"><i class="fa-solid fa-arrow-trend-up"></i> Sincronizados</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 2: Vencidos -->
+                    <div onclick="switchTab('tab-estoque')" class="cursor-pointer bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between hover:border-rose-400 transition-all">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Vencidos</span>
+                            <div class="w-6 h-6 rounded bg-rose-50 text-rose-600 flex items-center justify-center text-xs">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            <h3 class="text-lg font-black text-rose-600" id="mob-kpi-expired">1 Lote</h3>
+                            <p class="text-[9px] text-rose-500 font-bold mt-0.5"><i class="fa-solid fa-triangle-exclamation"></i> Remover hoje!</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 3: Vencendo -->
+                    <div onclick="switchTab('tab-estoque')" class="cursor-pointer bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between hover:border-amber-400 transition-all">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Vencendo (15d)</span>
+                            <div class="w-6 h-6 rounded bg-amber-50 text-amber-600 flex items-center justify-center text-xs">
+                                <i class="fa-solid fa-hourglass-half animate-pulse"></i>
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            <h3 class="text-lg font-black text-amber-600" id="mob-kpi-warning">1 Lote</h3>
+                            <p class="text-[9px] text-amber-500 font-semibold mt-0.5">Atenção preventiva</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 4: Estoque Baixo -->
+                    <div onclick="switchTab('tab-estoque')" class="cursor-pointer bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between hover:border-blue-400 transition-all">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Estoque Baixo</span>
+                            <div class="w-6 h-6 rounded bg-blue-50 text-blue-600 flex items-center justify-center text-xs">
+                                <i class="fa-solid fa-circle-arrow-down"></i>
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            <h3 class="text-lg font-black text-blue-900" id="mob-kpi-low">2 Itens</h3>
+                            <p class="text-[9px] text-blue-500 font-semibold mt-0.5">Reposição crítica</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Painel de Ações Rápidas -->
+                <div class="space-y-2.5">
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Ações de Inventário</h3>
+                    <div class="grid grid-cols-2 gap-2.5">
+                        <button onclick="switchTab('tab-scan')" class="p-3 bg-estrelato-500 hover:bg-estrelato-600 text-darkslate-900 font-bold rounded-xl text-xs flex items-center justify-center gap-2 shadow-sm transition-all">
+                            <i class="fa-solid fa-barcode text-sm"></i> Bipar Novo Lote
+                        </button>
+                        <button onclick="switchTab('tab-estoque')" class="p-3 bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold rounded-xl text-xs flex items-center justify-center gap-2 shadow-sm transition-all">
+                            <i class="fa-solid fa-list-check text-sm"></i> Auditar Estoque
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Notificações Recentes do WhatsApp de Hoje -->
+                <div class="space-y-2.5">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Alertas Disparados hoje</h3>
+                        <span class="text-[9px] font-extrabold text-slate-400 uppercase">Zapier Active</span>
+                    </div>
+                    
+                    <div class="space-y-2">
+                        <!-- Alerta Zapier WhatsApp -->
+                        <div class="p-3 bg-emerald-50 rounded-xl border border-emerald-100 flex items-start gap-2">
+                            <i class="fa-brands fa-whatsapp text-emerald-500 text-lg mt-0.5"></i>
+                            <div>
+                                <h4 class="text-[11px] font-bold text-slate-800">WhatsApp enviado para Leonardo</h4>
+                                <p class="text-[9px] text-slate-600 leading-tight">"Atenção: Coca-Cola Lata L-22A vence em breve..."</p>
+                                <span class="text-[8px] text-slate-400 mt-1 block">Há 15 min via Webhook</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TELA 3: ESTOQUE ATUAL (Lista com filtros de semáforo) -->
+            <div id="scr-estoque" class="hidden flex-1 flex flex-col p-4 space-y-4 pb-20">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h3 class="text-sm font-bold text-slate-800 leading-none">Controle de Validades</h3>
+                        <p class="text-[10px] text-slate-400 mt-1">Auditando prateleiras do mercadinho</p>
+                    </div>
+                </div>
+
+                <!-- Barra de Busca -->
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+                        <i class="fa-solid fa-magnifying-glass text-xs"></i>
+                    </span>
+                    <input type="text" id="mob-search" oninput="filterMobileList()"
+                        class="w-full pl-8 pr-3 py-2 bg-white border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-1 focus:ring-estrelato-500"
+                        placeholder="Buscar por nome, lote ou EAN...">
+                </div>
+
+                <!-- Filtros Semáforo de Alerta (Auto-Layout do Figma) -->
+                <div class="flex gap-1.5 overflow-x-auto no-scrollbar py-1 figma-border relative">
+                    <span class="figma-tag absolute -top-5 left-0 bg-rose-500 text-white text-[9px] px-1 rounded">Layout: TagFilters</span>
+                    
+                    <button onclick="filterMobileStatus('all')" id="btn-m-all" class="px-3 py-1.5 text-[10px] font-bold rounded-lg bg-darkslate-900 text-white shadow-sm transition-all shrink-0">
+                        Todos
+                    </button>
+                    <button onclick="filterMobileStatus('vencido')" id="btn-m-vencido" class="px-3 py-1.5 text-[10px] font-bold rounded-lg bg-white text-rose-600 border border-slate-200 shadow-sm transition-all shrink-0">
+                        Vencidos
+                    </button>
+                    <button onclick="filterMobileStatus('proximo')" id="btn-m-proximo" class="px-3 py-1.5 text-[10px] font-bold rounded-lg bg-white text-amber-600 border border-slate-200 shadow-sm transition-all shrink-0">
+                        Atenção
+                    </button>
+                    <button onclick="filterMobileStatus('seguro')" id="btn-m-seguro" class="px-3 py-1.5 text-[10px] font-bold rounded-lg bg-white text-emerald-600 border border-slate-200 shadow-sm transition-all shrink-0">
+                        Seguros
+                    </button>
+                    <button onclick="filterMobileStatus('baixo')" id="btn-m-baixo" class="px-3 py-1.5 text-[10px] font-bold rounded-lg bg-white text-blue-600 border border-slate-200 shadow-sm transition-all shrink-0">
+                        Baixo Estoque
+                    </button>
+                </div>
+
+                <!-- Lista de Lotes em Cards Mobile -->
+                <div class="flex-1 space-y-2.5 overflow-y-auto pr-0.5" id="mob-lotes-container">
+                    <!-- Preenchido via Javascript -->
+                </div>
+            </div>
+
+            <!-- TELA 4: SCANNER & CADASTRO DE LOTE -->
+            <div id="scr-scan" class="hidden flex-1 flex flex-col p-4 space-y-4 pb-20">
+                <div>
+                    <h3 class="text-sm font-bold text-slate-800 leading-none">Entrada de Mercadoria</h3>
+                    <p class="text-[10px] text-slate-400 mt-1">Leitor de barras integrado & Lançamento</p>
+                </div>
+
+                <!-- Scanner Simulador de Câmera -->
+                <div class="relative w-full h-36 bg-slate-900 rounded-2xl overflow-hidden flex flex-col items-center justify-center text-white border-2 border-dashed border-estrelato-500">
+                    <!-- Overlay de Animação de Linha Laser -->
+                    <div class="absolute inset-x-0 h-0.5 bg-red-500 scanner-laser shadow-[0_0_8px_#ef4444]"></div>
+                    
+                    <i class="fa-solid fa-barcode text-4xl text-estrelato-500 mb-1"></i>
+                    <p class="text-[10px] font-bold tracking-widest text-slate-300">CÂMERA ATIVA</p>
+                    <p class="text-[9px] text-slate-500">Aproxime o código de barras do celular</p>
+                    
+                    <!-- Botões Rápidos de Simulação para Teste Fácil -->
+                    <div class="absolute bottom-2 left-2 right-2 flex gap-1.5 justify-center">
+                        <button onclick="fillFormDemo('7894900011517', 'Coca-Cola Lata 350ml', 'L-22A', '24', '2026-11-20')" class="bg-slate-800 text-[8px] font-bold px-2 py-1 rounded border border-slate-700 text-amber-400 hover:bg-slate-700">Simular Coca</button>
+                        <button onclick="fillFormDemo('7891000341355', 'Leite Piracanjuba 1L', 'L-882', '5', '2026-05-18')" class="bg-slate-800 text-[8px] font-bold px-2 py-1 rounded border border-slate-700 text-amber-400 hover:bg-slate-700">Simular Leite (Vencido)</button>
+                    </div>
+                </div>
+
+                <!-- Formulário de Lote (Figma UI Component) -->
+                <form id="mob-form-add" onsubmit="handleMobileSubmit(event)" class="space-y-3.5 text-left figma-border relative">
+                    <span class="figma-tag absolute -top-5 left-0 bg-rose-500 text-white text-[9px] px-1 rounded">Component: InputForm</span>
+
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Código de Barras (EAN)</label>
+                        <input type="text" id="m-ean" required placeholder="789..."
+                            class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs focus:ring-1 focus:ring-estrelato-500 focus:outline-none">
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Nome do Produto</label>
+                        <input type="text" id="m-name" required placeholder="Ex: Chocolate Nestlé Barra 90g"
+                            class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs focus:ring-1 focus:ring-estrelato-500 focus:outline-none">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Lote</label>
+                            <input type="text" id="m-lote" required placeholder="Ex: L-40"
+                                class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs focus:ring-1 focus:ring-estrelato-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Quantidade</label>
+                            <input type="number" id="m-qty" required placeholder="Ex: 10"
+                                class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs focus:ring-1 focus:ring-estrelato-500 focus:outline-none">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Data de Validade</label>
+                        <input type="date" id="m-date" required
+                            class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs focus:ring-1 focus:ring-estrelato-500 focus:outline-none">
+                    </div>
+
+                    <div class="flex gap-2 pt-2">
+                        <button type="button" onclick="resetMobForm()" class="flex-1 py-2.5 bg-slate-200 text-slate-700 font-bold rounded-xl text-xs text-center">Limpar</button>
+                        <button type="submit" class="flex-1 py-2.5 bg-estrelato-500 text-darkslate-900 font-bold rounded-xl text-xs text-center shadow-md">Salvar Lote</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- TELA 5: IA & AUTOMATIONS (Alertas automáticos Zapier / Chatbot) -->
+            <div id="scr-ia" class="hidden flex-1 flex flex-col p-4 space-y-4 pb-20">
+                <div>
+                    <h3 class="text-sm font-bold text-slate-800 leading-none">IA & Automações</h3>
+                    <p class="text-[10px] text-slate-400 mt-1">Integração WhatsApp + IA Gemini</p>
+                </div>
+
+                <!-- Simular Teste de Fluxo de Mensagem -->
+                <div class="p-4 bg-slate-100 rounded-2xl border border-slate-200/80 text-center space-y-2.5">
+                    <div class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto text-lg">
+                        <i class="fa-brands fa-whatsapp"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-xs font-bold text-slate-800">Testar Disparo via API (Zapier)</h4>
+                        <p class="text-[9px] text-slate-500 mt-0.5">Disparar alerta manual para o WhatsApp do Administrador</p>
+                    </div>
+                    <button onclick="triggerMobileAlertSim()" class="w-full py-2 bg-darkslate-900 text-white hover:bg-slate-800 font-bold rounded-xl text-xs transition-all">
+                        Simular Disparo WhatsApp
+                    </button>
+                </div>
+
+                
+
+                <!-- Histórico de Integrações Ativas -->
+                <div class="space-y-2.5">
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Histórico de Eventos</h3>
+                    
+                    <div class="space-y-2 text-left">
+                        <!-- Evento 1 -->
+                        <div class="p-3 bg-white border border-slate-200 rounded-xl space-y-1">
+                            <div class="flex items-center justify-between">
+                                <span class="text-[9px] font-bold text-rose-600 uppercase">Sugestão de Preço</span>
+                                <span class="text-[8px] text-slate-400">1h atrás</span>
+                            </div>
+                            <p class="text-[10px] text-slate-700 leading-tight"><b>IA Sugeriu Promoção:</b> Bolacha Bauducco L-10C perto do vencimento. Desconto recomendado de 30%.</p>
+                        </div>
+
+                        <!-- Evento 2 -->
+                        <div class="p-3 bg-white border border-slate-200 rounded-xl space-y-1">
+                            <div class="flex items-center justify-between">
+                                <span class="text-[9px] font-bold text-indigo-600 uppercase">Backup Automático</span>
+                                <span class="text-[8px] text-slate-400">Ontem</span>
+                            </div>
+                            <p class="text-[10px] text-slate-700 leading-tight"><b>Banco Relacional:</b> Backup diário executado no PostgreSQL hospedado na nuvem.</p>
+                        </div>
+
+                        <!-- Evento 3 -->
+                        <div class="p-3 bg-white border border-slate-200 rounded-xl space-y-1">
+                            <div class="flex items-center justify-between">
+                                <span class="text-[9px] font-bold text-emerald-600 uppercase">WhatsApp disparado</span>
+                                <span class="text-[8px] text-slate-400">Ontem</span>
+                            </div>
+                            <p class="text-[10px] text-slate-700 leading-tight">Alerta de data de validade de <b>Iogurte Grego</b> recebido no WhatsApp de Simon.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TELA 6: PERFIL -->
+            <div id="scr-profile" class="hidden flex-1 flex flex-col p-4 space-y-4 pb-20">
+                
+                <div>
+                    <h3 class="text-sm font-bold text-slate-800 leading-none">Meu Perfil</h3>
+                    <p class="text-[10px] text-slate-400 mt-1">Gerencie suas informações</p>
+                </div>
+
+                <!-- Foto -->
+                <div class="flex flex-col items-center gap-3">
+                    <div class="w-24 h-24 rounded-full overflow-hidden border-4 border-estrelato-500 shadow-md">
+                        <img id="profile-photo"
+                            src="https://api.dicebear.com/7.x/bottts/svg?seed=Simon"
+                            class="w-full h-full object-cover">
+                    </div>
+
+                    <button class="text-[10px] font-bold text-estrelato-600">
+                        Alterar Foto
+                    </button>
+                </div>
+
+                <!-- Formulário -->
+                <div class="space-y-3">
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">
+                            Nome
+                        </label>
+
+                        <input type="text" value="Simon"
+                            class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-1 focus:ring-estrelato-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">
+                            Número
+                        </label>
+
+                        <input type="text" value="(48) 99999-9999"
+                            class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-1 focus:ring-estrelato-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">
+                            E-mail
+                        </label>
+
+                        <input type="email" value="simon@estrelato.com"
+                            class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-1 focus:ring-estrelato-500">
+                    </div>
+
+                    <button class="w-full py-3 bg-estrelato-500 text-darkslate-900 font-bold rounded-xl text-xs shadow-md">
+                        Salvar Alterações
+                    </button>
+                </div>
+
+                <!-- Botão sair -->
+                <button onclick="handleMobileLogout()"
+                    class="mt-auto w-full py-3 bg-rose-500 hover:bg-rose-600 text-white font-bold rounded-xl text-xs shadow-md transition-all">
+                    <i class="fa-solid fa-right-from-bracket mr-1"></i>
+                    Sair da Conta
+                </button>
+            </div>
+
+        </div>
+
+        <!-- ======================================================== -->
+        <!-- NAV BAR INFERIOR MOBILE (Navegador do Figma) -->
+        <!-- ======================================================== -->
+        <div id="mob-navbar" class="hidden absolute bottom-0 inset-x-0 h-16 bg-white border-t border-slate-200 flex items-center justify-around px-2 z-40">
+            <!-- Tab 1: Home Dashboard -->
+            <button onclick="switchTab('tab-home')" id="tab-home" class="flex flex-col items-center justify-center gap-1 text-estrelato-600 font-bold transition-all w-14">
+                <i class="fa-solid fa-chart-pie text-lg"></i>
+                <span class="text-[9px]">Início</span>
+            </button>
+
+            <!-- Tab 2: Estoque Lista -->
+            <button onclick="switchTab('tab-estoque')" id="tab-estoque" class="flex flex-col items-center justify-center gap-1 text-slate-400 font-semibold transition-all w-14">
+                <i class="fa-solid fa-boxes-stacked text-lg"></i>
+                <span class="text-[9px]">Estoque</span>
+            </button>
+
+            <!-- Tab 3: Bipar Scanner (Central) -->
+            <button onclick="switchTab('tab-scan')" id="tab-scan" class="flex flex-col items-center justify-center -mt-6 bg-darkslate-900 text-estrelato-500 hover:text-white w-12 h-12 rounded-full shadow-lg border-2 border-white transition-all">
+                <i class="fa-solid fa-barcode text-md"></i>
+            </button>
+
+            <!-- Tab 4: IA & Automações -->
+            <button onclick="switchTab('tab-ia')" id="tab-ia" class="flex flex-col items-center justify-center gap-1 text-slate-400 font-semibold transition-all w-14">
+                <i class="fa-solid fa-robot text-lg"></i>
+                <span class="text-[9px]">IA / Alertas</span>
+            </button>
+
+            <!-- Tab 5: Perfil -->
+            <button onclick="switchTab('tab-profile')" id="tab-profile" class="flex flex-col items-center justify-center gap-1 text-slate-400 font-semibold transition-all w-14">
+                <i class="fa-solid fa-user-circle text-lg"></i>
+                <span class="text-[9px]">Perfil</span>
+            </button>
+        </div>
+
+        <!-- HOME INDICATOR BAR (Barra de sistema do iOS) -->
+        <div class="absolute bottom-1 left-1/2 -translate-x-1/2 w-[120px] h-[4px] bg-slate-300 rounded-full z-40"></div>
+    </div>
+
+    <!-- NOTAS DE DESENVOLVIMENTO DO FIGMA (Ocultável) -->
+    <div id="figma-drawer" class="hidden mt-6 bg-slate-800 border border-slate-700 shadow-xl rounded-2xl p-5 max-w-[410px] w-full text-slate-300 text-xs space-y-4 text-left z-50">
+        <div class="flex items-center gap-2 border-b border-slate-700 pb-2">
+            <i class="fa-brands fa-figma text-rose-400 text-sm"></i>
+            <h3 class="font-bold text-white uppercase tracking-wider">Anotações do Protótipo (Trabalho)</h3>
+        </div>
+        <div class="space-y-3">
+            <div>
+                <h4 class="font-bold text-rose-400">1. Layout do Frame Mobile</h4>
+                <p class="text-slate-400 text-[11px] mt-0.5">Dimensionado como iPhone 13/14 Pro (390px x 844px) com Auto-Layout para fácil manuseio de toque do operador no balcão.</p>
+            </div>
+            <div>
+                <h4 class="font-bold text-rose-400">2. Componentização Reutilizável</h4>
+                <p class="text-slate-400 text-[11px] mt-0.5">Crie componentes locais para a barra de abas inferior (Tab Bar) e os cartões de semáforo de status de lote.</p>
+            </div>
+            <div>
+                <h4 class="font-bold text-rose-400">3. Variáveis de Cores Aplicadas</h4>
+                <p class="text-[11px] font-mono text-slate-300 flex items-center gap-1.5 mt-1">
+                    <span class="inline-block w-3 h-3 rounded bg-[#eab308]"></span> Dourado Estrelato (#eab308)
+                </p>
+                <p class="text-[11px] font-mono text-slate-300 flex items-center gap-1.5 mt-1">
+                    <span class="inline-block w-3 h-3 rounded bg-[#0f172a]"></span> Slate escuro (#0f172a)
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPTS DE COMPORTAMENTO E DADOS -->
+    <script>
+        // Dados locais iniciais para simulação móvel do Estoque
+        const initLotes = [
+            { ean: '7894900011517', name: 'Coca-Cola Lata 350ml', lote: 'L-22A', date: '2026-11-20', qty: 45 },
+            { ean: '7891000341355', name: 'Leite Integral Piracanjuba 1L', lote: 'L-882', date: '2026-05-18', qty: 1 }, // Vencido hoje
+            { ean: '7892144341908', name: 'Iogurte Grego Vigor 100g', lote: 'L-342', date: '2026-05-23', qty: 18 }, // Próximo ao vencimento (5 dias)
+            { ean: '7891052010216', name: 'Bolacha Bauducco Recheada', lote: 'L-10C', date: '2026-05-25', qty: 3 },  // Estoque Crítico
+            { ean: '7898911221102', name: 'Chocolate Lacta Barra 90g', lote: 'L-44B', date: '2026-08-30', qty: 24 }
+        ];
+
+        let database = [...initLotes];
+        let selectedFilter = 'all';
+
+        // Atualizar hora atual do smartphone simulado
+        function updateMobileClock() {
+            const now = new Date();
+            const hrs = String(now.getHours()).padStart(2, '0');
+            const mins = String(now.getMinutes()).padStart(2, '0');
+            document.getElementById('mobile-time').innerText = `${hrs}:${mins}`;
+        }
+        setInterval(updateMobileClock, 1000);
+        updateMobileClock();
+
+        // Manipulador de Login
+        function handleMobileLogin(e) {
+            e.preventDefault();
+            // Transição suave
+            document.getElementById('scr-login').classList.add('hidden');
+            document.getElementById('scr-dashboard').classList.remove('hidden');
+            document.getElementById('mob-navbar').classList.remove('hidden');
+            renderMobileLotes();
+        }
+
+        // Logout
+        function handleMobileLogout() {
+            document.getElementById('mob-navbar').classList.add('hidden');
+            document.getElementById('scr-dashboard').classList.add('hidden');
+            document.getElementById('scr-estoque').classList.add('hidden');
+            document.getElementById('scr-scan').classList.add('hidden');
+            document.getElementById('scr-ia').classList.add('hidden');
+            document.getElementById('scr-login').classList.remove('hidden');
+        }
+
+        // Navegação de Abas do Aplicativo
+        function switchTab(tabId) {
+            // Ocultar todas as telas principais
+            document.getElementById('scr-dashboard').classList.add('hidden');
+            document.getElementById('scr-estoque').classList.add('hidden');
+            document.getElementById('scr-scan').classList.add('hidden');
+            document.getElementById('scr-ia').classList.add('hidden');
+            document.getElementById('scr-profile').classList.add('hidden');
+
+            // Resetar estados das abas da barra inferior
+            ['tab-home', 'tab-estoque', 'tab-ia', 'tab-profile'].forEach(id => {
+                const el = document.getElementById(id);
+                el.className = "flex flex-col items-center justify-center gap-1 text-slate-400 font-semibold transition-all w-14";
+            });
+
+            // Ativar tela correspondente e estilizar a aba
+            if (tabId === 'tab-home') {
+                document.getElementById('scr-dashboard').classList.remove('hidden');
+                document.getElementById('tab-home').className = "flex flex-col items-center justify-center gap-1 text-estrelato-500 font-bold transition-all w-14";
+            } else if (tabId === 'tab-estoque') {
+                document.getElementById('scr-estoque').classList.remove('hidden');
+                document.getElementById('tab-estoque').className = "flex flex-col items-center justify-center gap-1 text-estrelato-500 font-bold transition-all w-14";
+                renderMobileLotes();
+            } else if (tabId === 'tab-scan') {
+                document.getElementById('scr-scan').classList.remove('hidden');
+                // Botão de scanner central não altera as abas normais
+            } else if (tabId === 'tab-ia') {
+                document.getElementById('scr-ia').classList.remove('hidden');
+                document.getElementById('tab-ia').className = "flex flex-col items-center justify-center gap-1 text-estrelato-500 font-bold transition-all w-14";
+            }
+            else if (tabId === 'tab-profile') {
+                document.getElementById('scr-profile').classList.remove('hidden');
+
+                document.getElementById('tab-profile').className =
+                "flex flex-col items-center justify-center gap-1 text-estrelato-500 font-bold transition-all w-14";
+            }
+        }
+
+        // Obter status do lote com semáforo lógico de cores
+        function getStatusInfo(dateStr, qty) {
+            const today = new Date('2026-05-18'); // Data fixa para demonstração consistente
+            const expDate = new Date(dateStr);
+            const diffTime = expDate - today;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+            if (diffDays < 0 || dateStr === '2026-05-18') {
+                return {
+                    status: 'vencido',
+                    label: 'Vencido',
+                    badge: 'bg-rose-500 text-white',
+                    cardBorder: 'border-rose-400'
+                };
+            } else if (diffDays <= 15) {
+                return {
+                    status: 'proximo',
+                    label: `Expira em ${diffDays}d`,
+                    badge: 'bg-amber-500 text-slate-900',
+                    cardBorder: 'border-amber-400'
+                };
+            } else {
+                return {
+                    status: 'seguro',
+                    label: 'Seguro',
+                    badge: 'bg-emerald-500 text-white',
+                    cardBorder: 'border-emerald-200'
+                };
+            }
+        }
+
+        // Renderizar Lista de Lotes no Mobile
+        function renderMobileLotes() {
+            const container = document.getElementById('mob-lotes-container');
+            container.innerHTML = '';
+
+            const filtered = database.filter(item => {
+                const statusInfo = getStatusInfo(item.date, item.qty);
+                if (selectedFilter === 'all') return true;
+
+                if (selectedFilter === 'baixo') {
+                    return item.qty <= 5;
+                }
+
+                return statusInfo.status === selectedFilter;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-8 text-slate-400">
+                        <i class="fa-solid fa-folder-open text-2xl mb-1"></i>
+                        <p class="text-xs">Nenhum lote correspondente encontrado.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            filtered.forEach((item, index) => {
+                const statusInfo = getStatusInfo(item.date, item.qty);
+                const isCritico = item.qty <= 5;
+
+                const card = document.createElement('div');
+                card.className = `p-3.5 bg-white rounded-2xl border-2 ${statusInfo.cardBorder} flex flex-col justify-between shadow-sm relative figma-border`;
+                card.innerHTML = `
+                    <span class="figma-tag absolute -top-5 left-0 bg-rose-500 text-white text-[9px] px-1 rounded">Component: LoteCard</span>
+                    
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-800 leading-tight">${item.name}</h4>
+                            <p class="text-[9px] text-slate-400 mt-0.5">EAN: ${item.ean} | Lote: <span class="bg-slate-100 px-1 rounded">${item.lote}</span></p>
+                        </div>
+                        <span class="text-[9px] font-bold px-2 py-0.5 rounded-full ${statusInfo.badge}">${statusInfo.label}</span>
+                    </div>
+
+                    <div class="flex items-center justify-between mt-3 pt-2.5 border-t border-slate-100">
+                        <div class="text-[10px]">
+                            <span class="text-slate-400">Validade:</span>
+                            <span class="font-bold text-slate-700">${formatMobileDate(item.date)}</span>
+                        </div>
+                        <div class="text-[10px] flex items-center gap-1">
+                            <span class="text-slate-400">Estoque:</span>
+                            <span class="font-extrabold ${isCritico ? 'text-rose-500' : 'text-slate-800'}">${item.qty} un</span>
+                            ${isCritico ? '<i class="fa-solid fa-triangle-exclamation text-rose-500 text-[10px]" title="Baixo Estoque"></i>' : ''}
+                        </div>
+                    </div>
+                    
+                    <!-- Botão excluir lote simulado -->
+                    <button onclick="deleteBatch(${index})" 
+                    class="mt-2 self-end text-slate-300 hover:text-rose-500 transition-colors text-xs p-1">
+                        <i class="fa-solid fa-circle-minus"></i>
+                    </button>
+                `;
+                container.appendChild(card);
+            });
+
+            calculateMobileKPIs();
+        }
+
+        // Deletar lote simulado
+        function deleteBatch(index) {
+            database.splice(index, 1);
+            renderMobileLotes();
+        }
+
+        // Calcular Métricas Ativas
+        function calculateMobileKPIs() {
+            const today = new Date('2026-05-18');
+            let total = database.length;
+            let expired = 0;
+            let warning = 0;
+            let low = 0;
+
+            database.forEach(item => {
+                const expDate = new Date(item.date);
+                const diffTime = expDate - today;
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                if (diffDays < 0 || item.date === '2026-05-18') {
+                    expired++;
+                } else if (diffDays <= 15) {
+                    warning++;
+                }
+
+                if (item.qty <= 5) {
+                    low++;
+                }
+            });
+
+            document.getElementById('mob-kpi-total').innerText = total;
+            document.getElementById('mob-kpi-expired').innerText = `${expired} Lote${expired !== 1 ? 's' : ''}`;
+            document.getElementById('mob-kpi-warning').innerText = `${warning} Lote${warning !== 1 ? 's' : ''}`;
+            document.getElementById('mob-kpi-low').innerText = `${low} Item${low !== 1 ? 's' : ''}`;
+        }
+
+        // Formatar datas
+        function formatMobileDate(dateStr) {
+            const parts = dateStr.split('-');
+            return `${parts[2]}/${parts[1]}/${parts[0]}`;
+        }
+
+        // Busca rápida na lista mobile
+        function filterMobileList() {
+            const query = document.getElementById('mob-search').value.toLowerCase();
+            const container = document.getElementById('mob-lotes-container');
+            container.innerHTML = '';
+
+            const filtered = database.filter(item => 
+                item.name.toLowerCase().includes(query) || 
+                item.lote.toLowerCase().includes(query) ||
+                item.ean.includes(query)
+            );
+
+            filtered.forEach((item, index) => {
+                const statusInfo = getStatusInfo(item.date, item.qty);
+                const isCritico = item.qty <= 5;
+
+                const card = document.createElement('div');
+                card.className = `p-3.5 bg-white rounded-2xl border-2 ${statusInfo.cardBorder} flex flex-col justify-between shadow-sm relative`;
+                card.innerHTML = `
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-800 leading-tight">${item.name}</h4>
+                            <p class="text-[9px] text-slate-400 mt-0.5">EAN: ${item.ean} | Lote: <span class="bg-slate-100 px-1 rounded">${item.lote}</span></p>
+                        </div>
+                        <span class="text-[9px] font-bold px-2 py-0.5 rounded-full ${statusInfo.badge}">${statusInfo.label}</span>
+                    </div>
+
+                    <div class="flex items-center justify-between mt-3 pt-2.5 border-t border-slate-100">
+                        <div class="text-[10px]">
+                            <span class="text-slate-400">Validade:</span>
+                            <span class="font-bold text-slate-700">${formatMobileDate(item.date)}</span>
+                        </div>
+                        <div class="text-[10px] flex items-center gap-1">
+                            <span class="text-slate-400">Estoque:</span>
+                            <span class="font-extrabold ${isCritico ? 'text-rose-500' : 'text-slate-800'}">${item.qty} un</span>
+                            ${isCritico ? '<i class="fa-solid fa-triangle-exclamation text-rose-500 text-[10px]" title="Baixo Estoque"></i>' : ''}
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Mudar categoria ativa do semáforo
+        function filterMobileStatus(filter) {
+            selectedFilter = filter;
+            
+            // Alterar visual dos botões
+            ['all', 'vencido', 'proximo', 'seguro', 'baixo'].forEach(filtName => {
+                const btn = document.getElementById(`btn-m-${filtName}`);
+                if (filtName === filter) {
+                    btn.className = "px-3 py-1.5 text-[10px] font-bold rounded-lg bg-darkslate-900 text-white shadow-sm transition-all shrink-0";
+                } else {
+                    btn.className = "px-3 py-1.5 text-[10px] font-bold rounded-lg bg-white text-slate-500 border border-slate-200 shadow-sm transition-all shrink-0";
+                }
+            });
+
+            renderMobileLotes();
+        }
+
+        // Preenchimento de demonstração ao usar simulação do Scanner
+        function fillFormDemo(ean, name, lote, qty, date) {
+            document.getElementById('m-ean').value = ean;
+            document.getElementById('m-name').value = name;
+            document.getElementById('m-lote').value = lote;
+            document.getElementById('m-qty').value = qty;
+            document.getElementById('m-date').value = date;
+        }
+
+        // Resetar Formulário
+        function resetMobForm() {
+            document.getElementById('mob-form-add').reset();
+        }
+
+        // Submeter Entrada de Produto
+        function handleMobileSubmit(e) {
+            e.preventDefault();
+            const ean = document.getElementById('m-ean').value;
+            const name = document.getElementById('m-name').value;
+            const lote = document.getElementById('m-lote').value;
+            const qty = parseInt(document.getElementById('m-qty').value);
+            const date = document.getElementById('m-date').value;
+
+            // Inserir no início do banco
+            database.unshift({ ean, name, lote, date, qty });
+            
+            // Redirecionar para Estoque
+            resetMobForm();
+            switchTab('tab-estoque');
+        }
+
+        // Simulação de Disparo de Alerta WhatsApp API
+        function triggerMobileAlertSim() {
+            const msgBox = document.createElement('div');
+            msgBox.className = "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 bg-white rounded-2xl border border-slate-200 p-5 shadow-2xl z-50 text-slate-800 space-y-3";
+            msgBox.innerHTML = `
+                <div class="text-center">
+                    <i class="fa-brands fa-whatsapp text-emerald-500 text-3xl"></i>
+                    <h4 class="font-bold text-xs mt-2 text-slate-800">Simulação de Disparo</h4>
+                    <p class="text-[10px] text-slate-500 mt-1">O Webhook foi enviado com sucesso para o Zapier. Uma mensagem contendo os lotes vencidos acaba de ser simulada para o celular cadastrado.</p>
+                </div>
+                <button onclick="this.parentElement.remove()" class="w-full py-1.5 bg-darkslate-900 text-white font-bold text-[10px] rounded-lg">Fechar</button>
+            `;
+            document.getElementById('mobile-viewport').appendChild(msgBox);
+        }
+
+        // Exibir Guias Figma
+        let showGuides = false;
+        function toggleFigmaGuides() {
+            showGuides = !showGuides;
+            const btn = document.getElementById('guideBtn');
+            const drawer = document.getElementById('figma-drawer');
+            const phone = document.querySelector('.relative.w-\\[390px\\]');
+
+            if (showGuides) {
+                phone.classList.add('figma-active');
+                drawer.classList.remove('hidden');
+                btn.classList.add('bg-rose-500', 'text-white');
+                btn.innerText = "Ocultar Notas Figma";
+            } else {
+                phone.classList.remove('figma-active');
+                drawer.classList.add('hidden');
+                btn.classList.remove('bg-rose-500', 'text-white');
+                btn.innerText = "Mostrar Notas Figma";
+            }
+        }
+
+        // Inicializador
+        renderMobileLotes();
+    </script>
+</body>
+</html>
